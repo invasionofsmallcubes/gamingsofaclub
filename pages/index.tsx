@@ -48,36 +48,26 @@ interface Props {
 }
 
 const Home: NextPage<Props> = (props: Props) => {
-  const lista = props.games.map((g) => <li key={g.rank}><GameCard game={g} /></li>);
+  const lista = props.games.map((g) => <GameCard key={g.rank} game={g} />);
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>The Game Sofa Club</title>
         <meta name="description" content="The Game Sofa Club - home of the top 100 video games of all time" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to The Game Sofa Club!
-        </h1>
-
-        <ul>{lista}</ul>
-
+      <main>
+        <section>
+          <div className='p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5'>
+            {lista}
+          </div>
+        </section>
       </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
+      <footer>
+        Footer
       </footer>
     </div>
   )

@@ -1,0 +1,50 @@
+.htlbBg {
+    @apply bg-black
+}
+
+.hltbData {
+    @apply text-gray-600
+}
+
+.hltbTitle {
+    @apply text-gray-900 leading-none
+}
+
+.hltbMain {
+    @apply text-sm  flex-col
+}
+
+.hltbImage {
+    @apply w-10 h-10 rounded-full mr-4
+}
+
+.hltbMain {
+    @apply flex flex-row
+}
+.tag {
+    @apply inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2
+}
+
+.tags {
+    @apply px-6 pt-4 pb-2
+}
+
+.below {
+    @apply px-6 py-4
+}
+
+.image {
+    @apply w-full
+}
+
+.main {
+    @apply max-w-sm rounded overflow-hidden shadow-lg
+}
+
+.title {
+    @apply font-bold text-xl mb-2
+}
+
+.summary {
+    @apply text-gray-700 text-base line-clamp-5
+}

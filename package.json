@@ -10,9 +10,12 @@
     "batch": "ts-node batch/scrape.ts"
   },
   "dependencies": {
+    "@tailwindcss/line-clamp": "^0.4.0",
+    "classnames": "^2.3.1",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.4.0",
     "wikijs": "^6.3.3"
   },
   "devDependencies": {
