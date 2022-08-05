@@ -5,6 +5,8 @@ import { Readable } from "node:stream"
 import wiki from 'wikijs'
 import * as fs from 'fs'
 import { JsonProperty, JsonClassType, ObjectMapper } from 'jackson-js';
+import { BeatInfo } from "../domain/BeatInfo"
+import { Game } from "../domain/Game"
 
 const url = 'https://www.ign.com/articles/the-best-100-video-games-of-all-time';
 
@@ -13,45 +15,6 @@ const w = wiki()
 const om = new ObjectMapper()
 
 const hltbService = new HowLongToBeatService();
-
-class BeatInfo {
-    @JsonProperty() @JsonClassType({ type: () => [Number] })
-    main: number
-    @JsonProperty() @JsonClassType({ type: () => [Number] })
-    mainExtra: number
-    @JsonProperty() @JsonClassType({ type: () => [Number] })
-    completionist: number
-    constructor(main: number, mainExtra: number, completionist: number) {
-        this.main = main
-        this.mainExtra = mainExtra;
-        this.completionist = completionist;
-    }
-}
-
-class Game {
-    @JsonProperty() @JsonClassType({ type: () => [Number] })
-    rank: number
-    @JsonProperty() @JsonClassType({ type: () => [String] })
-    name: string
-    @JsonProperty() @JsonClassType({ type: () => [String] })
-    slug: string
-    @JsonProperty() @JsonClassType({ type: () => [BeatInfo] })
-    beatInfo: BeatInfo
-    @JsonProperty() @JsonClassType({ type: () => [String] })
-    imageUrl: string
-    @JsonProperty() @JsonClassType({ type: () => [String] })
-    summary: string
-    constructor(rank: number, name: string,
-        slug: string, beatInfo: BeatInfo,
-        imageUrl: string, summary: string) {
-        this.rank = rank
-        this.name = name
-        this.slug = slug
-        this.beatInfo = beatInfo
-        this.imageUrl = imageUrl
-        this.summary = summary
-    }
-}
 
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -157,28 +120,65 @@ fetch(url, {
                 name,
                 slugId,
                 new BeatInfo(0, 0, 0),
-                "",
-                ""
+                "", "", [], []
             ))
-        })
-        return games
-    })
-    .then(games => {
-        games.forEach(async game => {
-            try {
-                const page = await w.page(game.name.replace(" (Remake)", ""))
-                const summary = await page.summary()
-                game.summary = summary
-                delay(1500)
-            } catch (e) {
-                console.log("page not found for " + game.name)
-            }
         })
         return games
     })
     .then(async games => {
         for (let i = 0; i < games.length; i++) {
-            const r = await hltbService.search(games[i].name)
+            let game = games[i]
+            try {
+                let name = game.name
+                if (name === 'Resident Evil 2 (Remake)') {
+                    name = 'Resident Evil 2'
+                } else if (name === 'GoldenEye 007') {
+                    name = 'GoldenEye 007 (1997 video game)'
+                } else if (name === 'Inside') {
+                    name = 'Inside (video game)'
+                } else if (name === 'Doom') {
+                    name = 'Doom (1993 video game)'
+                }
+                const page = await w.page(name)
+                const summary = await page.summary()
+                const fullInfo = await page.fullInfo()
+                type ObjectKey1 = keyof typeof fullInfo;
+                const general = 'general' as ObjectKey1;
+                const actual = fullInfo[general]
+                type ObjectKey2 = keyof typeof actual;
+                const platforms = 'platforms' as ObjectKey2;
+                const genre = 'genre' as ObjectKey2;
+
+                if (!Array.isArray(actual[platforms])) {
+                    game.platforms = [actual[platforms]]
+                } else {
+                    game.platforms = actual[platforms]
+                }
+                if (!Array.isArray(actual[genre])) {
+                    game.genres = [actual[genre]]
+                } else {
+                    game.genres = actual[genre]
+                }
+                game.summary = summary
+                delay(1500)
+            } catch (e) {
+                console.log("page not found for " + game.name)
+            }
+        }
+        return games
+    })
+    .then(async games => {
+        for (let i = 0; i < games.length; i++) {
+            let name = games[i].name
+            if (name === 'Resident Evil 2 (Remake)') {
+                name = 'Resident Evil 2'
+            } else if (name === 'Counter-Strike 1.6') {
+                name = 'Counter-Strike'
+            } else if (name === 'The Last of Us Part 2') {
+                name = 'The Last of Us Part II'
+            }
+
+            const r = await hltbService.search(name)
             if (r.length > 0) {
                 games[i].beatInfo = new BeatInfo(
                     r[0].gameplayMain,

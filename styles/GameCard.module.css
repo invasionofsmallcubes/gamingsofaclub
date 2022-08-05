@@ -1,21 +1,28 @@
+.imageCnt {
+    @apply h-[576px] bg-light-blue-400 bg-stripes bg-stripes-white
+}
+
+.htlbContent {
+    @apply flex-row
+}
 .htlbBg {
-    @apply bg-black
+    @apply bg-black row-span-1 align-middle
 }
 
 .hltbData {
-    @apply text-gray-600
+    @apply text-gray-600 row-span-1 col-span-1 text-xs
 }
 
 .hltbTitle {
-    @apply text-gray-900 leading-none
+    @apply text-gray-900 leading-none col-span-2
 }
 
 .hltbMain {
-    @apply text-sm  flex-col
+    @apply text-sm  grid grid-rows-2 gap-1
 }
 
 .hltbImage {
-    @apply w-10 h-10 rounded-full mr-4
+    @apply w-8 h-8 rounded-full
 }
 
 .hltbMain {
