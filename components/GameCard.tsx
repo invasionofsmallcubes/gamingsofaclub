@@ -10,7 +10,7 @@ interface Props {
 const GameCard: NextPage<Props> = (props: Props) => {
     const { game } = props
     console.log(game.platforms)
-    const platforms = game.platforms.map(function(item, i) { return <span key={i} className={styles.tag}>{p}</span>})
+    const platforms = game.platforms.map(function(p, i) { return <span key={i} className={styles.tag}>{p}</span>})
     return <div className={styles.main}>
         <div className={styles.below}>
             <div className={styles.title}>#{game.rank}</div>
